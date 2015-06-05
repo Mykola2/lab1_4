@@ -1,0 +1,443 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="registerModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="commissionorders">
+          <Key>
+            <PropertyRef Name="idCommissionOrders" />
+          </Key>
+          <Property Name="idCommissionOrders" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="commissionName" Type="varchar" MaxLength="45" />
+          <Property Name="commissionOrderNumber" Type="int" />
+          <Property Name="CommissionOrderDate" Type="date" />
+          <Property Name="Experts_idExperts" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="documents">
+          <Key>
+            <PropertyRef Name="idDocuments" />
+            <PropertyRef Name="Experts_idExperts" />
+          </Key>
+          <Property Name="idDocuments" Type="int" Nullable="false" />
+          <Property Name="releaseDate" Type="date" />
+          <Property Name="endDate" Type="date" />
+          <Property Name="documentType" Type="varchar" MaxLength="45" />
+          <Property Name="Experts_idExperts" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="expertise_type">
+          <Key>
+            <PropertyRef Name="idExpertise_type" />
+          </Key>
+          <Property Name="idExpertise_type" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Expertise_type_name" Type="varchar" MaxLength="90" />
+          <Property Name="Expertise_parent_type_id" Type="int" />
+        </EntityType>
+        <EntityType Name="experts">
+          <Key>
+            <PropertyRef Name="idExperts" />
+          </Key>
+          <Property Name="idExperts" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="60" />
+          <Property Name="workplace" Type="varchar" MaxLength="45" />
+          <Property Name="address" Type="varchar" MaxLength="45" />
+          <Property Name="phone" Type="varchar" MaxLength="20" />
+          <Property Name="idDocument" Type="varchar" MaxLength="45" />
+          <Property Name="idCommissionOrder" Type="int" />
+          <Property Name="idLegalIssue" Type="int" />
+        </EntityType>
+        <EntityType Name="legalissues">
+          <Key>
+            <PropertyRef Name="idLegalIssues" />
+            <PropertyRef Name="Experts_idExperts" />
+          </Key>
+          <Property Name="idLegalIssues" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LegalIssueDescription" Type="varchar" MaxLength="45" />
+          <Property Name="Experts_idExperts" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="qualifications">
+          <Key>
+            <PropertyRef Name="idQualifications" />
+          </Key>
+          <Property Name="idQualifications" Type="int" Nullable="false" />
+          <Property Name="CommissionOrders_idCommissionOrders" Type="int" Nullable="false" />
+          <Property Name="Expertise_type_idExpertise_type" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_CommissionOrders_Experts1">
+          <End Role="experts" Type="Self.experts" Multiplicity="1" />
+          <End Role="commissionorders" Type="Self.commissionorders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="experts">
+              <PropertyRef Name="idExperts" />
+            </Principal>
+            <Dependent Role="commissionorders">
+              <PropertyRef Name="Experts_idExperts" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Douments_Experts">
+          <End Role="experts" Type="Self.experts" Multiplicity="1" />
+          <End Role="documents" Type="Self.documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="experts">
+              <PropertyRef Name="idExperts" />
+            </Principal>
+            <Dependent Role="documents">
+              <PropertyRef Name="Experts_idExperts" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Expertise_type_Expertise_type1">
+          <End Role="expertise_type" Type="Self.expertise_type" Multiplicity="0..1" />
+          <End Role="expertise_type1" Type="Self.expertise_type" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expertise_type">
+              <PropertyRef Name="idExpertise_type" />
+            </Principal>
+            <Dependent Role="expertise_type1">
+              <PropertyRef Name="Expertise_parent_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_LegalIssues_Experts1">
+          <End Role="experts" Type="Self.experts" Multiplicity="1" />
+          <End Role="legalissues" Type="Self.legalissues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="experts">
+              <PropertyRef Name="idExperts" />
+            </Principal>
+            <Dependent Role="legalissues">
+              <PropertyRef Name="Experts_idExperts" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Qualifications_CommissionOrders1">
+          <End Role="commissionorders" Type="Self.commissionorders" Multiplicity="1" />
+          <End Role="qualifications" Type="Self.qualifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="commissionorders">
+              <PropertyRef Name="idCommissionOrders" />
+            </Principal>
+            <Dependent Role="qualifications">
+              <PropertyRef Name="CommissionOrders_idCommissionOrders" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Qualifications_Expertise_type1">
+          <End Role="expertise_type" Type="Self.expertise_type" Multiplicity="1" />
+          <End Role="qualifications" Type="Self.qualifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expertise_type">
+              <PropertyRef Name="idExpertise_type" />
+            </Principal>
+            <Dependent Role="qualifications">
+              <PropertyRef Name="Expertise_type_idExpertise_type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="registerModelStoreContainer">
+          <EntitySet Name="commissionorders" EntityType="Self.commissionorders" Schema="register" store:Type="Tables" />
+          <EntitySet Name="documents" EntityType="Self.documents" Schema="register" store:Type="Tables" />
+          <EntitySet Name="expertise_type" EntityType="Self.expertise_type" Schema="register" store:Type="Tables" />
+          <EntitySet Name="experts" EntityType="Self.experts" Schema="register" store:Type="Tables" />
+          <EntitySet Name="legalissues" EntityType="Self.legalissues" Schema="register" store:Type="Tables" />
+          <EntitySet Name="qualifications" EntityType="Self.qualifications" Schema="register" store:Type="Tables" />
+          <AssociationSet Name="fk_CommissionOrders_Experts1" Association="Self.fk_CommissionOrders_Experts1">
+            <End Role="experts" EntitySet="experts" />
+            <End Role="commissionorders" EntitySet="commissionorders" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Douments_Experts" Association="Self.fk_Douments_Experts">
+            <End Role="experts" EntitySet="experts" />
+            <End Role="documents" EntitySet="documents" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Expertise_type_Expertise_type1" Association="Self.fk_Expertise_type_Expertise_type1">
+            <End Role="expertise_type" EntitySet="expertise_type" />
+            <End Role="expertise_type1" EntitySet="expertise_type" />
+          </AssociationSet>
+          <AssociationSet Name="fk_LegalIssues_Experts1" Association="Self.fk_LegalIssues_Experts1">
+            <End Role="experts" EntitySet="experts" />
+            <End Role="legalissues" EntitySet="legalissues" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Qualifications_CommissionOrders1" Association="Self.fk_Qualifications_CommissionOrders1">
+            <End Role="commissionorders" EntitySet="commissionorders" />
+            <End Role="qualifications" EntitySet="qualifications" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Qualifications_Expertise_type1" Association="Self.fk_Qualifications_Expertise_type1">
+            <End Role="expertise_type" EntitySet="expertise_type" />
+            <End Role="qualifications" EntitySet="qualifications" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="registerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="commissionorders">
+          <Key>
+            <PropertyRef Name="idCommissionOrders" />
+          </Key>
+          <Property Name="idCommissionOrders" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="commissionName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="commissionOrderNumber" Type="Int32" />
+          <Property Name="CommissionOrderDate" Type="DateTime" />
+          <Property Name="Experts_idExperts" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="experts" Relationship="Self.fk_CommissionOrders_Experts1" FromRole="commissionorders" ToRole="experts" />
+          <NavigationProperty Name="qualifications" Relationship="Self.fk_Qualifications_CommissionOrders1" FromRole="commissionorders" ToRole="qualifications" />
+        </EntityType>
+        <EntityType Name="documents">
+          <Key>
+            <PropertyRef Name="idDocuments" />
+            <PropertyRef Name="Experts_idExperts" />
+          </Key>
+          <Property Name="idDocuments" Type="Int32" Nullable="false" />
+          <Property Name="releaseDate" Type="DateTime" />
+          <Property Name="endDate" Type="DateTime" />
+          <Property Name="documentType" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Experts_idExperts" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="experts" Relationship="Self.fk_Douments_Experts" FromRole="documents" ToRole="experts" />
+        </EntityType>
+        <EntityType Name="expertise_type">
+          <Key>
+            <PropertyRef Name="idExpertise_type" />
+          </Key>
+          <Property Name="idExpertise_type" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Expertise_type_name" Type="String" MaxLength="90" FixedLength="false" Unicode="false" />
+          <Property Name="Expertise_parent_type_id" Type="Int32" />
+          <NavigationProperty Name="expertise_type1" Relationship="Self.fk_Expertise_type_Expertise_type1" FromRole="expertise_type" ToRole="expertise_type1" />
+          <NavigationProperty Name="expertise_type2" Relationship="Self.fk_Expertise_type_Expertise_type1" FromRole="expertise_type1" ToRole="expertise_type" />
+          <NavigationProperty Name="qualifications" Relationship="Self.fk_Qualifications_Expertise_type1" FromRole="expertise_type" ToRole="qualifications" />
+        </EntityType>
+        <EntityType Name="experts">
+          <Key>
+            <PropertyRef Name="idExperts" />
+          </Key>
+          <Property Name="idExperts" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="workplace" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="address" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="idDocument" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="idCommissionOrder" Type="Int32" />
+          <Property Name="idLegalIssue" Type="Int32" />
+          <NavigationProperty Name="commissionorders" Relationship="Self.fk_CommissionOrders_Experts1" FromRole="experts" ToRole="commissionorders" />
+          <NavigationProperty Name="documents" Relationship="Self.fk_Douments_Experts" FromRole="experts" ToRole="documents" />
+          <NavigationProperty Name="legalissues" Relationship="Self.fk_LegalIssues_Experts1" FromRole="experts" ToRole="legalissues" />
+        </EntityType>
+        <EntityType Name="legalissues">
+          <Key>
+            <PropertyRef Name="idLegalIssues" />
+            <PropertyRef Name="Experts_idExperts" />
+          </Key>
+          <Property Name="idLegalIssues" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LegalIssueDescription" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Experts_idExperts" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="experts" Relationship="Self.fk_LegalIssues_Experts1" FromRole="legalissues" ToRole="experts" />
+        </EntityType>
+        <EntityType Name="qualifications">
+          <Key>
+            <PropertyRef Name="idQualifications" />
+          </Key>
+          <Property Name="idQualifications" Type="Int32" Nullable="false" />
+          <Property Name="CommissionOrders_idCommissionOrders" Type="Int32" Nullable="false" />
+          <Property Name="Expertise_type_idExpertise_type" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="commissionorders" Relationship="Self.fk_Qualifications_CommissionOrders1" FromRole="qualifications" ToRole="commissionorders" />
+          <NavigationProperty Name="expertise_type" Relationship="Self.fk_Qualifications_Expertise_type1" FromRole="qualifications" ToRole="expertise_type" />
+        </EntityType>
+        <Association Name="fk_CommissionOrders_Experts1">
+          <End Role="experts" Type="Self.experts" Multiplicity="1" />
+          <End Role="commissionorders" Type="Self.commissionorders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="experts">
+              <PropertyRef Name="idExperts" />
+            </Principal>
+            <Dependent Role="commissionorders">
+              <PropertyRef Name="Experts_idExperts" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Qualifications_CommissionOrders1">
+          <End Role="commissionorders" Type="Self.commissionorders" Multiplicity="1" />
+          <End Role="qualifications" Type="Self.qualifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="commissionorders">
+              <PropertyRef Name="idCommissionOrders" />
+            </Principal>
+            <Dependent Role="qualifications">
+              <PropertyRef Name="CommissionOrders_idCommissionOrders" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Douments_Experts">
+          <End Role="experts" Type="Self.experts" Multiplicity="1" />
+          <End Role="documents" Type="Self.documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="experts">
+              <PropertyRef Name="idExperts" />
+            </Principal>
+            <Dependent Role="documents">
+              <PropertyRef Name="Experts_idExperts" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Expertise_type_Expertise_type1">
+          <End Role="expertise_type" Type="Self.expertise_type" Multiplicity="0..1" />
+          <End Role="expertise_type1" Type="Self.expertise_type" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expertise_type">
+              <PropertyRef Name="idExpertise_type" />
+            </Principal>
+            <Dependent Role="expertise_type1">
+              <PropertyRef Name="Expertise_parent_type_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Qualifications_Expertise_type1">
+          <End Role="expertise_type" Type="Self.expertise_type" Multiplicity="1" />
+          <End Role="qualifications" Type="Self.qualifications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="expertise_type">
+              <PropertyRef Name="idExpertise_type" />
+            </Principal>
+            <Dependent Role="qualifications">
+              <PropertyRef Name="Expertise_type_idExpertise_type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_LegalIssues_Experts1">
+          <End Role="experts" Type="Self.experts" Multiplicity="1" />
+          <End Role="legalissues" Type="Self.legalissues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="experts">
+              <PropertyRef Name="idExperts" />
+            </Principal>
+            <Dependent Role="legalissues">
+              <PropertyRef Name="Experts_idExperts" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="registerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="commissionorders" EntityType="Self.commissionorders" />
+          <EntitySet Name="documents" EntityType="Self.documents" />
+          <EntitySet Name="expertise_type" EntityType="Self.expertise_type" />
+          <EntitySet Name="experts" EntityType="Self.experts" />
+          <EntitySet Name="legalissues" EntityType="Self.legalissues" />
+          <EntitySet Name="qualifications" EntityType="Self.qualifications" />
+          <AssociationSet Name="fk_CommissionOrders_Experts1" Association="Self.fk_CommissionOrders_Experts1">
+            <End Role="experts" EntitySet="experts" />
+            <End Role="commissionorders" EntitySet="commissionorders" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Qualifications_CommissionOrders1" Association="Self.fk_Qualifications_CommissionOrders1">
+            <End Role="commissionorders" EntitySet="commissionorders" />
+            <End Role="qualifications" EntitySet="qualifications" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Douments_Experts" Association="Self.fk_Douments_Experts">
+            <End Role="experts" EntitySet="experts" />
+            <End Role="documents" EntitySet="documents" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Expertise_type_Expertise_type1" Association="Self.fk_Expertise_type_Expertise_type1">
+            <End Role="expertise_type" EntitySet="expertise_type" />
+            <End Role="expertise_type1" EntitySet="expertise_type" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Qualifications_Expertise_type1" Association="Self.fk_Qualifications_Expertise_type1">
+            <End Role="expertise_type" EntitySet="expertise_type" />
+            <End Role="qualifications" EntitySet="qualifications" />
+          </AssociationSet>
+          <AssociationSet Name="fk_LegalIssues_Experts1" Association="Self.fk_LegalIssues_Experts1">
+            <End Role="experts" EntitySet="experts" />
+            <End Role="legalissues" EntitySet="legalissues" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="registerModelStoreContainer" CdmEntityContainer="registerEntities">
+          <EntitySetMapping Name="commissionorders">
+            <EntityTypeMapping TypeName="registerModel.commissionorders">
+              <MappingFragment StoreEntitySet="commissionorders">
+                <ScalarProperty Name="idCommissionOrders" ColumnName="idCommissionOrders" />
+                <ScalarProperty Name="commissionName" ColumnName="commissionName" />
+                <ScalarProperty Name="commissionOrderNumber" ColumnName="commissionOrderNumber" />
+                <ScalarProperty Name="CommissionOrderDate" ColumnName="CommissionOrderDate" />
+                <ScalarProperty Name="Experts_idExperts" ColumnName="Experts_idExperts" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="documents">
+            <EntityTypeMapping TypeName="registerModel.documents">
+              <MappingFragment StoreEntitySet="documents">
+                <ScalarProperty Name="idDocuments" ColumnName="idDocuments" />
+                <ScalarProperty Name="releaseDate" ColumnName="releaseDate" />
+                <ScalarProperty Name="endDate" ColumnName="endDate" />
+                <ScalarProperty Name="documentType" ColumnName="documentType" />
+                <ScalarProperty Name="Experts_idExperts" ColumnName="Experts_idExperts" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="expertise_type">
+            <EntityTypeMapping TypeName="registerModel.expertise_type">
+              <MappingFragment StoreEntitySet="expertise_type">
+                <ScalarProperty Name="idExpertise_type" ColumnName="idExpertise_type" />
+                <ScalarProperty Name="Expertise_type_name" ColumnName="Expertise_type_name" />
+                <ScalarProperty Name="Expertise_parent_type_id" ColumnName="Expertise_parent_type_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="experts">
+            <EntityTypeMapping TypeName="registerModel.experts">
+              <MappingFragment StoreEntitySet="experts">
+                <ScalarProperty Name="idExperts" ColumnName="idExperts" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="workplace" ColumnName="workplace" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="idDocument" ColumnName="idDocument" />
+                <ScalarProperty Name="idCommissionOrder" ColumnName="idCommissionOrder" />
+                <ScalarProperty Name="idLegalIssue" ColumnName="idLegalIssue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="legalissues">
+            <EntityTypeMapping TypeName="registerModel.legalissues">
+              <MappingFragment StoreEntitySet="legalissues">
+                <ScalarProperty Name="idLegalIssues" ColumnName="idLegalIssues" />
+                <ScalarProperty Name="LegalIssueDescription" ColumnName="LegalIssueDescription" />
+                <ScalarProperty Name="Experts_idExperts" ColumnName="Experts_idExperts" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="qualifications">
+            <EntityTypeMapping TypeName="registerModel.qualifications">
+              <MappingFragment StoreEntitySet="qualifications">
+                <ScalarProperty Name="idQualifications" ColumnName="idQualifications" />
+                <ScalarProperty Name="CommissionOrders_idCommissionOrders" ColumnName="CommissionOrders_idCommissionOrders" />
+                <ScalarProperty Name="Expertise_type_idExpertise_type" ColumnName="Expertise_type_idExpertise_type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
